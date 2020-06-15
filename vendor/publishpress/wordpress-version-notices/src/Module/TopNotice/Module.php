@@ -81,16 +81,16 @@ class Module implements AdInterface
     public function display($message = '', $linkURL = '')
     {
         try {
-        if (empty($message) || empty($linkURL)) {
-            throw new TemplateInvalidArgumentsException();
-        }
+            if (empty($message) || empty($linkURL)) {
+                throw new TemplateInvalidArgumentsException();
+            }
 
-        $context = [
-            'message' => $message,
-            'linkURL' => $linkURL
-        ];
+            $context = [
+                'message' => $message,
+                'linkURL' => $linkURL
+            ];
 
-        $this->templateLoader->displayOutput('top-notice', 'notice', $context);
+            $this->templateLoader->displayOutput('top-notice', 'notice', $context);
         } catch (\Exception $e) {
             if (defined('WP_DEBUG') && WP_DEBUG) {
                 $this->exceptions[] = $e->getMessage();
@@ -108,24 +108,24 @@ class Module implements AdInterface
         $screen = get_current_screen();
 
         if (!empty($screen)) {
-        foreach ($this->settings as $pluginName => $setting) {
-            foreach ($setting['screens'] as $screenParams) {
-                if ($screenParams === true) {
-                    return $setting;
-                }
+            foreach ($this->settings as $pluginName => $setting) {
+                foreach ($setting['screens'] as $screenParams) {
+                    if ($screenParams === true) {
+                        return $setting;
+                    }
 
-                $validVars = 0;
-                foreach ($screenParams as $var => $value) {
-                    if (isset($screen->$var) && $screen->$var === $value) {
-                        $validVars++;
+                    $validVars = 0;
+                    foreach ($screenParams as $var => $value) {
+                        if (isset($screen->$var) && $screen->$var === $value) {
+                            $validVars++;
+                        }
+                    }
+
+                    if ($validVars === count($screenParams)) {
+                        return $setting;
                     }
                 }
-
-                if ($validVars === count($screenParams)) {
-                    return $setting;
-                }
             }
-        }
         }
 
         return false;
